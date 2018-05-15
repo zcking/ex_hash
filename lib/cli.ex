@@ -4,7 +4,8 @@ defmodule ExHash.CLI do
     [
       file: :string,
       text: :string,
-      alg: :string
+      alg: :string,
+      help: :boolean,
     ]
   end
 
@@ -12,7 +13,8 @@ defmodule ExHash.CLI do
     [
       f: :file,
       t: :text,
-      a: :alg
+      a: :alg,
+      h: :help,
     ]
   end
 
@@ -29,12 +31,32 @@ defmodule ExHash.CLI do
     ]
   end
 
+  defp help_msg() do
+    """
+    Welcome to ExHash, a simple CLI for hashing text and files!
+
+    File Usage:
+      ./ex_hash (-f|--file) <filepath> (-a|--alg) <algorithm>
+
+    Text Usage:
+      ./ex_hash (-t|--text) <text> (-a|--alg) <algorithm>
+
+    Display this Help Message:
+      ./ex_hash (-h|--help)
+
+    """
+  end
+
   def main(args) do
     {opts, _, _} = OptionParser.parse(args, switches: switches(), aliases: aliases())
 
     opts = Enum.into(opts, %{})
 
     case opts do
+      %{help: true} ->
+        IO.puts(help_msg())
+        System.halt(1)
+
       %{file: file_name, alg: alg} ->
         hash_file(file_name, alg)
 
@@ -58,8 +80,8 @@ defmodule ExHash.CLI do
         System.halt(1)
 
       _ ->
-        IO.puts("You must specify a file or text, and a hashing algorithm to use")
-        # TODO create help method for help text and print it here
+        IO.puts(help_msg())
+        System.halt(1)
     end
   end
 
