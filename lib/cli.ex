@@ -112,7 +112,7 @@ defmodule ExHash.CLI do
 
     alg = String.to_atom(algorithm)
 
-    IO.puts("hashing #{file_name} with #{algorithm} algorithm...")
+    IO.puts("hashing #{truncate(file_name)} with #{algorithm} algorithm...")
     data = File.read!(Path.expand(file_name))
     hash = :crypto.hash(alg, data) |> Base.encode16 |> String.downcase
     IO.puts("\n#{hash}")
@@ -122,9 +122,17 @@ defmodule ExHash.CLI do
     check_alg(algorithm)
     alg = String.to_atom(algorithm)
 
-    IO.puts("hashing #{text} with #{algorithm} algorithm...")
+    IO.puts("hashing #{truncate(text)} with #{algorithm} algorithm...")
     hash = :crypto.hash(alg, text) |> Base.encode16 |> String.downcase
     IO.puts("\n#{hash}")
+  end
+
+  defp truncate(str, max_chars \\ 10) when max_chars >= 0 do
+    if (String.length(str) > max_chars) do
+      String.slice(str, 0, max_chars - 3) <> "..."
+    else
+      str
+    end
   end
 
 end
