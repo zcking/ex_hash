@@ -1,5 +1,5 @@
 defmodule ExHash.CLI do
-  
+
   defp switches() do
     [
       file: :string,
@@ -44,7 +44,8 @@ defmodule ExHash.CLI do
     Display this Help Message:
       ./ex_hash (-h|--help)
 
-    """
+    Supported Hash Algorithms:
+    """ <> Enum.join(Enum.map(algorithms(), &(" - #{&1}\n")))
   end
 
   def main(args) do
